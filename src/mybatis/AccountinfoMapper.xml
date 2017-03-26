@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.AccountinfoMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.Accountinfo" >
+			<result column="id" property="id"/>
+			<!-- <result column="customer_id" property="customerId"/>
+			<result column="user_id" property="userId"/> -->
+			<result column="train" property="train"/>
+			<result column="traout" property="traout"/>
+			<result column="traowner" property="traowner"/>
+			<result column="operatedate" property="operatedate"/>
+			<result column="khyj" property="khyj"/>
+			<result column="sfck" property="sfck"/>
+			<result column="zjpassword" property="zjpassword"/>
+			<result column="jypassword" property="jypassword"/>
+			<association property="user" column="user_id"
+			javaType="com.flf.entity.User">
+			<id column="user_id" property="userId" />
+			<result column="user_name" property="username" />
+			</association>
+			<association property="customer" column="customer_id"
+			javaType="com.flf.entity.Customer">
+			<id column="customer_id" property="id" />
+			<result column="customer_name" property="name" />
+			<result column="customer_account" property="account" />
+			<result column="fxlever" property="fxlever" />
+			</association>
+		</resultMap>
+	       
+	<!-- tb_accountinfo table all fields -->
+	<sql id="Base_Column_List" >
+		 id,customer_id,user_id,train,traout,traowner,operatedate,khyj,sfck,zjpassword,jypassword
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and a.id =  #{id}
+		</if>
+				<if test="customer != null and customer != ''" >
+		    and c.name =  #{customer.name}  or c.account = #{customer.name}
+		</if>
+				<if test="user != null and user != ''" >
+		    and a.user_id =  #{user.userId}
+		</if>
+				<if test="train != null and train != ''" >
+		    and a.train =  #{train}
+		</if>
+				<if test="traout != null and traout != ''" >
+		    and a.traout =  #{traout}
+		</if>
+				<if test="traowner != null and traowner != ''" >
+		    and a.traowner =  #{traowner}
+		</if>
+				<if test="operatedate != null and operatedate != ''" >
+		    and a.operatedate =  #{operatedate}
+		</if>
+				<if test="khyj != null and khyj != ''" >
+		    and a.khyj =  #{khyj}
+		</if>
+				<if test="sfck != null and sfck != ''" >
+		    and a.sfck =  #{sfck}
+		</if>
+				<if test="zjpassword != null and zjpassword != ''" >
+		    and a.zjpassword =  #{zjpassword}
+		</if>
+				<if test="jypassword != null and jypassword != ''" >
+		    and a.jypassword =  #{jypassword}
+		</if>
+		</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		  insert into tb_accountinfo(id,customer_id,user_id,train,traout,traowner,operatedate,khyj,sfck,zjpassword,jypassword)
+ values(#{id},#{customer.id},#{user.userId},#{train},#{traout},#{traowner},#{operatedate},#{khyj},#{sfck},#{zjpassword},#{jypassword})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  update tb_accountinfo set customer_id=#{customer.id},user_id=#{user.userId},train=#{train},traout=#{traout},traowner=#{traowner},operatedate=#{operatedate},khyj=#{khyj},sfck=#{sfck},zjpassword=#{zjpassword},jypassword=#{jypassword} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update tb_accountinfo set 
+	<trim  suffixOverrides="," >
+	<if test="customerId != null  ">
+		customer_id=#{customerId},
+	</if>
+	<if test="userId != null  ">
+		user_id=#{userId},
+	</if>
+	<if test="in != null  ">
+		train=#{train},
+	</if>
+	<if test="out != null  ">
+		traout=#{traout},
+	</if>
+	<if test="owner != null  ">
+		traowner=#{traowner},
+	</if>
+	<if test="operatedate != null  ">
+		operatedate=#{operatedate},
+	</if>
+	<if test="khyj != null  ">
+		khyj=#{khyj},
+	</if>
+	<if test="sfck != null  ">
+		sfck=#{sfck},
+	</if>
+	<if test="zjpassword != null  ">
+		zjpassword=#{zjpassword},
+	</if>
+	<if test="jypassword != null  ">
+		jypassword=#{jypassword},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete 	 from tb_accountinfo where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 账户信息管理 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" /> 
+	 from tb_accountinfo where id = #{id}
+	</select>
+	
+	<!-- 账户信息管理 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from tb_accountinfo 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询账户信息管理列表 --> 
+	<!-- <select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_accountinfo 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  id
+	    </if>
+	</select> -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select a.id,a.train,a.traout,a.traowner,a.operatedate,a.khyj,a.sfck,a.zjpassword,a.jypassword,
+		u.user_id user_id,u.username user_name,
+		c.id customer_id,c.name customer_name,c.account customer_account,c.fxlever
+		from tb_accountinfo a
+		left join tb_user u on
+		a.user_id = u.user_id
+		left join tb_customer c on
+		c.id = a.customer_id
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  a.id
+	    </if>
+	</select> 
+	
+</mapper>   

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.LinkGroupmsgMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.wx.LinkGroupmsg" >
+			<result column="id" property="id"/>
+			<result column="msgID" property="msgID"/>
+			<result column="linkID" property="linkID"/>
+		</resultMap>
+	       
+	<!-- tb_link_groupmsg table all fields -->
+	<sql id="Base_Column_List" >
+		 id,msgID,linkID
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and id =  #{id}
+		</if>
+				<if test="msgID != null and msgID != ''" >
+		    and msgID =  #{msgID}
+		</if>
+				<if test="linkID != null and linkID != ''" >
+		    and linkID =  #{linkID}
+		</if>
+		</trim>
+	</sql>
+
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="LinkGroupmsg" flushCache="true">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		  insert into tb_link_groupmsg(id,msgID,linkID)
+ values(id,#{msgID},#{linkID})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="LinkGroupmsg" >
+	  update tb_link_groupmsg set msgID=#{msgID},linkID=#{linkID} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="LinkGroupmsg" >
+		update tb_link_groupmsg set 
+	<trim  suffixOverrides="," >
+	<if test="msgID != null  ">
+		msgID=#{msgID},
+	</if>
+	<if test="linkID != null  ">
+		linkID=#{linkID},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="LinkGroupmsg">
+		delete 	 from tb_link_groupmsg where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 微信群发链接原文链接 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="LinkGroupmsg">
+		select <include refid="Base_Column_List" /> 
+	 from tb_link_groupmsg where id = #{id}
+	</select>
+	
+	<!-- 微信群发链接原文链接 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Long"  parameterType="LinkGroupmsg">
+		select count(1) from tb_link_groupmsg 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询微信群发链接原文链接列表 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="LinkGroupmsg">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_link_groupmsg 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  id
+	    </if>
+	</select>
+	<!-- 查询微信群发链接 -->
+	<select id="queryByLinkGroupmsg" resultType="LinkGroupmsg" parameterType="LinkGroupmsg">
+		select * from tb_link_groupmsg where 1=1
+		<if test="msgID != null  ">
+			 and msgID=#{msgID}
+		</if>
+		<if test="linkID != null  ">
+			 and linkID=#{linkID}
+		</if>
+	</select>
+</mapper>   

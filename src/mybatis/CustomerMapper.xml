@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.CustomerMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.Customer" >
+			<result column="id" property="id"/>
+			<result column="account" property="account"/>
+			<result column="password" property="password"/>
+			<result column="name" property="name"/>
+			<result column="sex" property="sex"/>
+			<result column="birth" property="birth"/>
+			<result column="idCardNum" property="idCardNum"/>
+			<result column="mobile" property="mobile"/>
+			<result column="jobcode" property="jobcode"/>
+			<result column="xlcode" property="xlcode"/>
+			<result column="idCardType" property="idCardType"/>
+			<result column="address" property="address"/>
+			<result column="emergencyContact" property="emergencyContact"/>
+			<result column="emergencyMobile" property="emergencyMobile"/>
+			<result column="isLocked" property="isLocked"/>
+			<result column="isFrozened" property="isFrozened"/>
+			<result column="email" property="email"/>
+			<result column="signcenter" property="signcenter"/>
+			<result column="fxlever" property="fxlever"/>
+			<result column="opendate" property="opendate"/>
+			<result column="fxcpdate" property="fxcpdate"/>
+			<result column="fxdqdate" property="fxdqdate"/>
+			<result column="cashaccount" property="cashaccount"/>
+			<result column="hucode" property="hucode"/>
+			<result column="shencode" property="shencode"/>
+			<association property="user" column="user_id"
+			javaType="com.flf.entity.User">
+			<id column="user_id" property="userId" />
+			<result column="user_name" property="username" />
+			</association>
+		</resultMap>
+	       
+	<!-- tb_customer table all fields -->
+	<sql id="Base_Column_List" >
+		 id,account,password,name,sex,birth,idCardNum,mobile,jobcode,xlcode,idCardType,address,emergencyContact,emergencyMobile,isLocked,isFrozened,email,signcenter,fxlever,opendate,fxcpdate,fxdqdate,cashaccount,hucode,shencode
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and c.id =  #{id}
+		</if>
+				<if test="account != null and account != ''" >
+		    and c.account =  #{account}
+		</if>
+				<if test="password != null and password != ''" >
+		    and c.password =  #{password}
+		</if>
+				<if test="name != null and name != ''" >
+		    and c.name =  #{name} or c.account=#{name}
+		</if>
+				<if test="sex != null and sex != ''" >
+		    and c.sex =  #{sex}
+		</if>
+				<if test="birth != null and birth != ''" >
+		    and c.birth =  #{birth}
+		</if>
+				<if test="idCardNum != null and idCardNum != ''" >
+		    and c.idCardNum =  #{idCardNum}
+		</if>
+				<if test="mobile != null and mobile != ''" >
+		    and c.mobile =  #{mobile}
+		</if>
+				<if test="jobcode != null and jobcode != ''" >
+		    and c.jobcode =  #{jobcode}
+		</if>
+				<if test="xlcode != null and xlcode != ''" >
+		    and c.xlcode =  #{xlcode}
+		</if>
+				<if test="idCardType != null and idCardType != ''" >
+		    and c.idCardType =  #{idCardType}
+		</if>
+				<if test="address != null and address != ''" >
+		    and c.address =  #{address}
+		</if>
+				<if test="emergencyContact != null and emergencyContact != ''" >
+		    and c.emergencyContact =  #{emergencyContact}
+		</if>
+				<if test="emergencyMobile != null and emergencyMobile != ''" >
+		    and c.emergencyMobile =  #{emergencyMobile}
+		</if>
+				<if test="isLocked != null and isLocked != ''" >
+		    and c.isLocked =  #{isLocked}
+		</if>
+				<if test="isFrozened != null and isFrozened != ''" >
+		    and c.isFrozened =  #{isFrozened}
+		</if>
+				<if test="email != null and email != ''" >
+		    and c.email =  #{email}
+		</if>
+				<if test="signcenter != null and signcenter != ''" >
+		    and c.signcenter =  #{signcenter}
+		</if>
+				<if test="fxlever != null and fxlever != ''" >
+		    and c.fxlever =  #{fxlever}
+		</if>
+				<if test="opendate != null and opendate != ''" >
+		    and c.opendate =  #{opendate}
+		</if>
+				<if test="fxcpdate != null and fxcpdate != ''" >
+		    and c.fxcpdate =  #{fxcpdate}
+		</if>
+				<if test="fxdqdate != null and fxdqdate != ''" >
+		    and c.fxdqdate =  #{fxdqdate}
+		</if>
+				<if test="cashaccount != null and cashaccount != ''" >
+		    and c.cashaccount =  #{cashaccount}
+		</if>
+				<if test="hucode != null and hucode != ''" >
+		    and c.hucode =  #{hucode}
+		</if>
+				<if test="shencode != null and shencode != ''" >
+		    and c.dshencode =  #{shencode}
+		</if>
+		</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" useGeneratedKeys="true" keyProperty="id" >
+	<!-- 	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey> -->
+		  insert into tb_customer(id,account,password,name,sex,birth,idCardNum,mobile,jobcode,xlcode,idCardType,address,emergencyContact,emergencyMobile,isLocked,isFrozened,email,signcenter,fxlever,opendate,fxcpdate,fxdqdate,cashaccount,hucode,shencode,user_id)
+ values(#{id},#{account},#{password},#{name},#{sex},#{birth},#{idCardNum},#{mobile},#{jobcode},#{xlcode},#{idCardType},#{address},#{emergencyContact},#{emergencyMobile},#{isLocked},#{isFrozened},#{email},#{signcenter},#{fxlever},#{opendate},#{fxcpdate},#{fxdqdate},#{cashaccount},#{hucode},#{shencode},#{user.userId})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  update tb_customer set account=#{account},password=#{password},name=#{name},sex=#{sex},birth=#{birth},idCardNum=#{idCardNum},mobile=#{mobile},jobcode=#{jobcode},xlcode=#{xlcode},idCardType=#{idCardType},address=#{address},emergencyContact=#{emergencyContact},emergencyMobile=#{emergencyMobile},isLocked=#{isLocked},isFrozened=#{isFrozened},email=#{email},signcenter=#{signcenter},fxlever=#{fxlever},opendate=#{opendate},fxcpdate=#{fxcpdate},fxdqdate=#{fxdqdate},cashaccount=#{cashaccount},hucode=#{hucode},shencode=#{shencode} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update tb_customer set 
+	<trim  suffixOverrides="," >
+	<if test="account != null  ">
+		account=#{account},
+	</if>
+	<if test="password != null  ">
+		password=#{password},
+	</if>
+	<if test="name != null  ">
+		name=#{name},
+	</if>
+	<if test="sex != null  ">
+		sex=#{sex},
+	</if>
+	<if test="birth != null  ">
+		birth=#{birth},
+	</if>
+	<if test="idCardNum != null  ">
+		idCardNum=#{idCardNum},
+	</if>
+	<if test="mobile != null  ">
+		mobile=#{mobile},
+	</if>
+	<if test="jobcode != null  ">
+		jobcode=#{jobcode},
+	</if>
+	<if test="xlcode != null  ">
+		xlcode=#{xlcode},
+	</if>
+	<if test="idCardType != null  ">
+		idCardType=#{idCardType},
+	</if>
+	<if test="address != null  ">
+		address=#{address},
+	</if>
+	<if test="emergencyContact != null  ">
+		emergencyContact=#{emergencyContact},
+	</if>
+	<if test="emergencyMobile != null  ">
+		emergencyMobile=#{emergencyMobile},
+	</if>
+	<if test="isLocked != null  ">
+		isLocked=#{isLocked},
+	</if>
+	<if test="isFrozened != null  ">
+		isFrozened=#{isFrozened},
+	</if>
+	<if test="email != null  ">
+		email=#{email},
+	</if>
+	<if test="signcenter != null  ">
+		signcenter=#{signcenter},
+	</if>
+	<if test="fxlever != null  ">
+		fxlever=#{fxlever},
+	</if>
+	<if test="opendate != null  ">
+		opendate=#{opendate},
+	</if>
+	<if test="fxcpdate != null  ">
+		fxcpdate=#{fxcpdate},
+	</if>
+	<if test="fxdqdate != null  ">
+		fxdqdate=#{fxdqdate},
+	</if>
+	<if test="cashaccount != null  ">
+		cashaccount=#{cashaccount},
+	</if>
+	<if test="hucode != null  ">
+		hucode=#{hucode},
+	</if>
+	<if test="shencode != null  ">
+		shencode=#{shencode},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete 	 from tb_customer where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 客户信息 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+	<!-- 	select <include refid="Base_Column_List" /> 
+	 from tb_customer where id = #{id} -->
+	 select 
+			 c.id,c.account,c.password,c.name,c.sex,c.birth,c.idCardNum,c.mobile,c.jobcode,
+			 c.xlcode,c.idCardType,c.address,c.emergencyContact,c.emergencyMobile,c.isLocked,
+			 c.isFrozened,c.email,c.signcenter,c.fxlever,c.opendate,c.fxcpdate,c.fxdqdate,
+			 c.cashaccount,c.hucode,c.shencode,
+		<!-- <include refid="Base_Column_List"/> -->
+		u.user_id user_id,u.username user_name
+		from tb_customer c
+		left join tb_user u on
+		c.user_id=u.user_id
+		 where id = #{id}
+	</select>
+	
+	<!-- 客户信息 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from tb_customer 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询客户信息列表 -->
+	<!-- <select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_customer 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  id
+	    </if>
+	</select> -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+			 c.id,c.account,c.password,c.name,c.sex,c.birth,c.idCardNum,c.mobile,c.jobcode,
+			 c.xlcode,c.idCardType,c.address,c.emergencyContact,c.emergencyMobile,c.isLocked,
+			 c.isFrozened,c.email,c.signcenter,c.fxlever,c.opendate,c.fxcpdate,c.fxdqdate,
+			 c.cashaccount,c.hucode,c.shencode,
+		<!-- <include refid="Base_Column_List"/> -->
+		u.user_id user_id,u.username user_name
+		from tb_customer c
+		left join tb_user u on
+		c.user_id=u.user_id
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  c.id
+	    </if>
+	</select>
+</mapper>   

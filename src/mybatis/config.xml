@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 手工加 -->
+	<typeAliases>
+		<!--系统相关 -->
+		<typeAlias type="com.flf.entity.User" alias="User" />
+		<typeAlias type="com.flf.entity.Page" alias="Page" />
+		<typeAlias type="com.flf.entity.Role" alias="Role" />
+		<typeAlias type="com.flf.entity.Menu" alias="Menu" />
+		<typeAlias type="com.flf.entity.Info" alias="Info" />
+		<typeAlias type="com.flf.entity.Msg" alias="Msg" />
+		<typeAlias type="com.flf.entity.MsgType" alias="MsgType" />
+		<typeAlias type="com.flf.entity.Navigation" alias="Navigation" />
+		<typeAlias type="com.flf.entity.Site" alias="Site" />
+		<typeAlias type="com.flf.entity.Pic" alias="Pic" />
+		<typeAlias type="com.flf.entity.PicType" alias="PicType" />
+		
+		<!-- 毕业设计 -->
+		<typeAlias type="com.flf.entity.Customer" alias="Customer"/>
+		<typeAlias type="com.flf.entity.Transactionflow" alias="Transactionflow"/>
+		<typeAlias type="com.flf.entity.Accountinfo" alias="Accountinfo"/>
+		<typeAlias type="com.flf.entity.Assinfo" alias="Assinfo"/>
+		<typeAlias type="com.flf.entity.Fitment" alias="Fitment"/>
+		<typeAlias type="com.flf.entity.Customerproperty" alias="Customerproperty"/>
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.flf.plugin.PagePlugin">
+			<property name="dialect" value="mysql" />
+			<property name="pageSqlId" value=".*listPage.*" />
+		</plugin>
+	</plugins>
+	<!-- 手工加 -->
+	<mappers>
+		<!--系统相关 -->
+		<mapper resource="mybatis/User.xml" />
+		<mapper resource="mybatis/Role.xml" />
+		<mapper resource="mybatis/Menu.xml" />
+		<mapper resource="mybatis/Info.xml" />
+		<mapper resource="mybatis/Msg.xml" />
+		<mapper resource="mybatis/MsgType.xml" />
+		<mapper resource="mybatis/Navigation.xml" />
+		<mapper resource="mybatis/Site.xml" />
+		<mapper resource="mybatis/Pic.xml" />
+		<mapper resource="mybatis/PicType.xml" />
+		<!-- 毕业设计 -->
+		<mapper resource="mybatis/CustomerMapper.xml"/>
+		<mapper resource="mybatis/TransactionflowMapper.xml"/>
+		<mapper resource="mybatis/AccountinfoMapper.xml"/>
+		<mapper resource="mybatis/AssinfoMapper.xml"/>
+		<mapper resource="mybatis/FitmentMapper.xml"/> 
+		<mapper resource="mybatis/CustomerpropertyMapper.xml"/> 
+	</mappers>
+
+</configuration>

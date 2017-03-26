@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.PicTypeMapper">
+
+	<resultMap type="PicType" id="picTypeResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="code" property="code"/>
+		<result column="parent" property="parent"/>
+	</resultMap>
+	
+	<select id="listAllParentPicType" resultMap="picTypeResultMap">
+		select * from tb_pic_type where parent is null
+	</select>
+	<select id="listSubPicTypeByParentId" parameterType="int" resultMap="picTypeResultMap">
+		select * from tb_pic_type where parent=#{parent}
+	</select>
+	<select id="getPicTypeById" parameterType="int" resultMap="picTypeResultMap">
+		select * from tb_pic_type where id=#{id}
+	</select>
+	<select id="listAllSubPicType" resultMap="picTypeResultMap">
+		select * from tb_pic_type where parent is not null
+	</select>
+	
+	<insert id="insertPicType" parameterType="PicType"  useGeneratedKeys="true" keyProperty="id">
+		insert into tb_pic_type (name,code,parent) values (#{name},#{code},#{parent})
+	</insert>
+	
+	<update id="updatePicType" parameterType="PicType">
+		update tb_pic_type set 
+		name=#{name},
+		code=#{code},
+		parent=#{parent} 
+		where id=#{id}
+	</update>
+	
+	<delete id="deletePicTypeById" parameterType="int">
+		delete from tb_pic_type where id=#{id} or parent=#{parent}
+	</delete>
+</mapper>

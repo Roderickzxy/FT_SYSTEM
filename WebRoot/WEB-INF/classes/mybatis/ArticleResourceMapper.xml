@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.flf.mapper.ArticleResourceMapper">
+	<resultMap id="articleResourceResultMap" type="ArticleResource">
+		<id column="id" property="id" />
+		<result column="title" property="title"  />
+		<result column="thumb_media_id" property="thumb_media_id" />
+		<result column="author" property="author"  />
+		<result column="show_cover_pic" property="show_cover_pic" />
+		<result column="digest" property="digest" />
+		<result column="url" property="url" />
+		<result column="content_source_url" property="content_source_url" />
+		<result column="p_mediaid" property="p_mediaid" />
+		<result column="createdtime" property="createdtime"  />
+		<result column="content" property="content"  />
+	</resultMap>
+	<!-- <sql id="Base_Column_List">
+		id, title, thumb_media_id, author, show_cover_pic, digest,
+		url,
+		content_source_url,
+		p_mediaid, createdtime
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql> -->
+	<select id="listAll" resultMap="articleResourceResultMap">
+		select * from
+		tb_wxarticle_resource where 1=1
+	</select>
+	<select id="listByProperty" resultMap="articleResourceResultMap"
+		parameterType="ArticleResource">
+		select * from
+		tb_wxarticle_resource where 1=1
+		<if test="title != null">
+			and title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="thumb_media_id != null">
+			and thumb_media_id = #{thumb_media_id,jdbcType=VARCHAR}
+		</if>
+		<if test="author != null">
+			and author = #{author,jdbcType=VARCHAR}
+		</if>
+		<if test="show_cover_pic != null">
+			and show_cover_pic = #{show_cover_pic,jdbcType=INTEGER}
+		</if>
+		<if test="digest != null">
+			and digest = #{digest,jdbcType=VARCHAR}
+		</if>
+		<if test="url != null">
+			and url = #{url,jdbcType=VARCHAR}
+		</if>
+		<if test="content_source_url != null">
+			and content_source_url =
+			#{content_source_url,jdbcType=VARCHAR}
+		</if>
+		<if test="p_mediaid != null">
+			and p_mediaid = #{p_mediaid,jdbcType=VARCHAR}
+		</if>
+		<if test="createdtime != null">
+			and createdtime = #{createdtime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="content != null">
+			and content = #{content,jdbcType=LONGVARCHAR}
+		</if>
+	</select>
+	<select id="selectById"  resultType="ArticleResource"
+		parameterType="java.lang.Long">
+		select *
+		from tb_wxarticle_resource
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	
+	<delete id="deleteById" parameterType="java.lang.Long"
+		flushCache="true">
+		delete from tb_wxarticle_resource
+		where id =
+		#{id,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="insertArticleResource" parameterType="ArticleResource" flushCache="true">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		tb_wxarticle_resource (id,title, thumb_media_id, author,
+		show_cover_pic,
+		digest, url,
+		content_source_url, p_mediaid, createdtime,
+		content)
+		values
+		(id,#{title,jdbcType=VARCHAR},
+		#{thumb_media_id,jdbcType=VARCHAR},
+		#{author,jdbcType=VARCHAR},
+		#{show_cover_pic,jdbcType=INTEGER},
+		#{digest,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{content_source_url,jdbcType=VARCHAR},
+		#{p_mediaid,jdbcType=VARCHAR},
+		now(),
+		#{content,jdbcType=LONGVARCHAR})
+	</insert>
+	<!-- <insert id="insertSelective" parameterType="ArticleResource"
+		useGeneratedKeys="true" keyProperty="id" flushCache="true">
+		insert into tb_wxarticle_resource
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			title,
+			thumb_media_id,
+			author,
+			show_cover_pic,
+			digest,
+			url,
+			content_source_url,
+			p_mediaid,
+			createdtime,
+			content,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{title,jdbcType=VARCHAR},
+			#{thumb_media_id,jdbcType=VARCHAR},
+			#{author,jdbcType=VARCHAR},
+			#{show_cover_pic,jdbcType=INTEGER},
+			#{digest,jdbcType=VARCHAR},
+			#{url,jdbcType=VARCHAR},
+			#{content_source_url,jdbcType=VARCHAR},
+			#{p_mediaid,jdbcType=VARCHAR},
+			#{createdtime,jdbcType=TIMESTAMP},
+			#{content,jdbcType=LONGVARCHAR},
+		</trim>
+	</insert>  -->
+	
+	<update id="updateById" parameterType="ArticleResource" flushCache="true">
+		update
+		tb_wxarticle_resource
+		set title = #{title,jdbcType=VARCHAR},
+		thumb_media_id = #{thumb_media_id,jdbcType=VARCHAR},
+		author =
+		#{author,jdbcType=VARCHAR},
+		show_cover_pic =
+		#{show_cover_pic,jdbcType=INTEGER},
+		digest =
+		#{digest,jdbcType=VARCHAR},
+		url = #{url,jdbcType=VARCHAR},
+		content_source_url =
+		#{content_source_url,jdbcType=VARCHAR},
+		p_mediaid =
+		#{p_mediaid,jdbcType=VARCHAR},
+		createdtime =
+		now()
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<!-- 
+	<update id="updateByIdSelective" parameterType="ArticleResource"
+		flushCache="true">
+		update tb_wxarticle_resource
+		<set>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="thumb_media_id != null">
+				thumb_media_id = #{thumb_media_id,jdbcType=VARCHAR},
+			</if>
+			<if test="author != null">
+				author = #{author,jdbcType=VARCHAR},
+			</if>
+			<if test="show_cover_pic != null">
+				show_cover_pic = #{show_cover_pic,jdbcType=INTEGER},
+			</if>
+			<if test="digest != null">
+				digest = #{digest,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="content_source_url != null">
+				content_source_url =
+				#{content_source_url,jdbcType=VARCHAR},
+			</if>
+			<if test="p_mediaid != null">
+				p_mediaid = #{p_mediaid,jdbcType=VARCHAR},
+			</if>
+			<if test="createdtime != null">
+				createdtime = #{createdtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByIdWithBLOBs" parameterType="ArticleResource"
+		flushCache="true">
+		update tb_wxarticle_resource
+		set title =
+		#{title,jdbcType=VARCHAR},
+		thumb_media_id =
+		#{thumb_media_id,jdbcType=VARCHAR},
+		author =
+		#{author,jdbcType=VARCHAR},
+		show_cover_pic =
+		#{show_cover_pic,jdbcType=INTEGER},
+		digest =
+		#{digest,jdbcType=VARCHAR},
+		url = #{url,jdbcType=VARCHAR},
+		content_source_url = #{content_source_url,jdbcType=VARCHAR},
+		p_mediaid
+		=
+		#{p_mediaid,jdbcType=VARCHAR},
+		createdtime =
+		#{createdtime,jdbcType=TIMESTAMP},
+		content =
+		#{content,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	-->
+</mapper>

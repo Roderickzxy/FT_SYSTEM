@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.MsgMapper">
+
+	<resultMap type="Msg" id="msgResultMap">
+		<id column="msg_id" property="msgId"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="status" property="status"/>
+		<result column="loginname" property="loginname"/>
+		<result column="video" property="video"/>
+		<result column="pic" property="pic"/>
+		<result column="msg_type_id" property="msgTypeId"/>
+		<result column="sytj" property="sytj"/>
+		<result column="descripse" property="descripse"/>
+	</resultMap>
+	
+	<!-- 定义一张表,并且来个关联表 -->
+    <resultMap type="Msg" id="msgJoinMsgTypeResultMap">
+        <id column="msg_id" property="msgId"/>
+		<result column="title" property="title"/>
+		<result column="status" property="status"/>
+		<result column="video" property="video"/>
+		<result column="pic" property="pic"/>
+		<result column="sytj" property="sytj"/>
+		<result column="descripse" property="descripse"/>
+        <!-- 关联MsgType表 -->
+        <association property="msgType" column="msgTypeId"
+            javaType="MsgType" resultMap="joinMsgResult" />
+    </resultMap>
+    <!-- 关联表需要的列 -->
+    <resultMap type="MsgType" id="joinMsgResult">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+	</resultMap>
+	
+	
+	<select id="getMsgById" parameterType="int" resultMap="msgResultMap">
+		select * from tb_msg where msg_id=#{msgId}
+	</select>
+	<select id="listAllMsg" resultMap="msgResultMap">
+		select * from tb_msg order by msg_id desc
+	</select>
+	
+	<insert id="insertMsg" parameterType="Msg"  useGeneratedKeys="true" keyProperty="msgId">
+		insert into tb_msg (title,content,status,loginname,video,pic,msg_type_id,sytj,descripse) 
+			values (#{title},#{content},#{status},#{loginname},#{video},#{pic},#{msgTypeId},#{sytj},#{descripse})
+	</insert>
+	
+	<update id="updateMsg" parameterType="Msg">
+		update tb_msg set 
+		title=#{title},
+		content=#{content},
+		status=#{status}, 
+		loginname=#{loginname},
+		video=#{video},
+		pic=#{pic},
+		msg_type_id=#{msgTypeId},
+		sytj=#{sytj},
+		descripse=#{descripse} 
+		where msg_id=#{msgId}
+	</update>
+	
+	<delete id="deleteMsgById" parameterType="int">
+		delete from tb_msg where msg_id=#{msgId}
+	</delete>
+	
+	<select id="getCountByTitle" parameterType="Msg" resultType="int">
+		select count(msg_id) from tb_msg where title=#{title}
+		<if test="msgId!=null or msgId>0">
+		 and msg_id!=#{msgId}
+		</if>
+	</select>
+	
+	<select id="listPageMsg" parameterType="Msg" resultMap="msgResultMap">
+		select * from tb_msg
+		
+		where 1=1 
+		<if test="title!=null and title!=''">
+			and title like "%"#{title}"%" 
+		</if>
+	</select>
+	
+	<!-- 关联查询 -->  
+    <select id="listMsgJoinMsgType"  
+        resultMap="msgJoinMsgTypeResultMap" parameterType="Msg">  
+        select w.msg_id,a.name,w.title,w.status,w.video,w.pic,w.sytj,w.descripse
+        from tb_msg w 
+        left outer join tb_msg_type a on w.msg_type_id = a.id 
+        where 1=1 
+        <if test="title!=null and title!=''">
+			and w.title like "%"#{title}"%" 
+		</if> 
+        order by w.msg_id desc  
+    </select>
+</mapper>

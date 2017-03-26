@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.MsgTypeMapper">
+
+	<resultMap type="MsgType" id="msgTypeResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="code" property="code"/>
+		<result column="parent" property="parent"/>
+	</resultMap>
+	
+	<select id="listAllParentMsgType" resultMap="msgTypeResultMap">
+		select * from tb_msg_type where parent is null
+	</select>
+	<select id="listSubMsgTypeByParentId" parameterType="int" resultMap="msgTypeResultMap">
+		select * from tb_msg_type where parent=#{parent}
+	</select>
+	<select id="getMsgTypeById" parameterType="int" resultMap="msgTypeResultMap">
+		select * from tb_msg_type where id=#{id}
+	</select>
+	<select id="listAllSubMsgType" resultMap="msgTypeResultMap">
+		select * from tb_msg_type where parent is not null
+	</select>
+	
+	<insert id="insertMsgType" parameterType="MsgType"  useGeneratedKeys="true" keyProperty="id">
+		insert into tb_msg_type (name,code,parent) values (#{name},#{code},#{parent})
+	</insert>
+	
+	<update id="updateMsgType" parameterType="MsgType">
+		update tb_msg_type set 
+		name=#{name},
+		code=#{code},
+		parent=#{parent} 
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteMsgTypeById" parameterType="int">
+		delete from tb_msg_type where id=#{id} or parent=#{parent}
+	</delete>
+</mapper>

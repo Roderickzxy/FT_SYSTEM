@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.SystemsettingMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.Systemsetting" >
+			<result column="id" property="id"/>
+			<result column="isOpen" property="isOpen"/>
+			<result column="shortcutIcon" property="shortcutIcon"/>
+			<result column="coAgreement" property="coAgreement"/>
+			<result column="wxConfig" property="wxConfig"/>
+			<result column="tel" property="tel"/>
+			<result column="fzzTel" property="fzzTel"/>
+			<result column="qq" property="qq"/>
+			<result column="wxId" property="wxId"/>
+			<result column="iBeacon" property="iBeacon"/>
+		</resultMap>
+	       
+	<!-- tb_systemsetting table all fields -->
+	<sql id="Base_Column_List" >
+		 id,isOpen,shortcutIcon,coAgreement,wxConfig,tel,fzzTel,qq,wxId,iBeacon
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and id =  #{id}
+		</if>
+				<if test="isOpen != null and isOpen != ''" >
+		    and isOpen =  #{isOpen}
+		</if>
+				<if test="shortcutIcon != null and shortcutIcon != ''" >
+		    and shortcutIcon =  #{shortcutIcon}
+		</if>
+				<if test="coAgreement != null and coAgreement != ''" >
+		    and coAgreement =  #{coAgreement}
+		</if>
+				<if test="wxConfig != null and wxConfig != ''" >
+		    and wxConfig =  #{wxConfig}
+		</if>
+				<if test="tel != null and tel != ''" >
+		    and tel =  #{tel}
+		</if>
+				<if test="fzzTel != null and fzzTel != ''" >
+		    and fzzTel =  #{fzzTel}
+		</if>
+				<if test="qq != null and qq != ''" >
+		    and qq =  #{qq}
+		</if>
+				<if test="wxId != null and wxId != ''" >
+		    and wxId =  #{wxId}
+		</if>
+				<if test="iBeacon != null and iBeacon != ''" >
+		    and iBeacon =  #{iBeacon}
+		</if>
+		</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		  insert into tb_systemsetting(id,isOpen,shortcutIcon,coAgreement,wxConfig,tel,fzzTel,qq,wxId,iBeacon)
+ values(#{id},#{isOpen},#{shortcutIcon},#{coAgreement},#{wxConfig},#{tel},#{fzzTel},#{qq},#{wxId},#{iBeacon})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  update tb_systemsetting set isOpen=#{isOpen},shortcutIcon=#{shortcutIcon},coAgreement=#{coAgreement},wxConfig=#{wxConfig},tel=#{tel},fzzTel=#{fzzTel},qq=#{qq},wxId=#{wxId},iBeacon=#{iBeacon} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update tb_systemsetting set 
+	<trim  suffixOverrides="," >
+	<if test="isOpen != null  ">
+		isOpen=#{isOpen},
+	</if>
+	<if test="shortcutIcon != null  ">
+		shortcutIcon=#{shortcutIcon},
+	</if>
+	<if test="coAgreement != null  ">
+		coAgreement=#{coAgreement},
+	</if>
+	<if test="wxConfig != null  ">
+		wxConfig=#{wxConfig},
+	</if>
+	<if test="tel != null  ">
+		tel=#{tel},
+	</if>
+	<if test="fzzTel != null  ">
+		fzzTel=#{fzzTel},
+	</if>
+	<if test="qq != null  ">
+		qq=#{qq},
+	</if>
+	<if test="wxId != null  ">
+		wxId=#{wxId},
+	</if>
+	<if test="iBeacon != null  ">
+		iBeacon=#{iBeacon},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete 	 from tb_systemsetting where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 系统配置 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" /> 
+	 from tb_systemsetting where id = #{id}
+	</select>
+	
+	<!-- 系统配置 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from tb_systemsetting 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询系统配置列表 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_systemsetting 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by id
+	    </if>
+	</select>
+</mapper>   

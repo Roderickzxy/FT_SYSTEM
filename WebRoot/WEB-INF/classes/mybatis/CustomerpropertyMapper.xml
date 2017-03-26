@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.CustomerpropertyMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.Customerproperty" >
+			<result column="id" property="id"/>
+			<result column="name" property="name"/>
+			<result column="code" property="code"/>
+			<result column="fittype" property="fittype"/>
+			<result column="type" property="type"/>
+			<!-- <result column="customer_id" property="customerId"/> -->
+			<association property="customer" column="customer_id"
+			javaType="com.flf.entity.Customer">
+			<id column="customer_id" property="id" />
+			<result column="customer_name" property="name" />
+			<result column="customer_account" property="account" />
+			</association>
+		</resultMap>
+	       
+	<!-- tb_customerproperty table all fields -->
+	<sql id="Base_Column_List" >
+		 id,name,code,fittype,customer_id,type
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and cp.id =  #{id}
+		</if>
+				<if test="name != null and name != ''" >
+		    and cp.name =  #{name}
+		</if>
+				<if test="code != null and code != ''" >
+		    and cp.code =  #{code}
+		</if>
+				<if test="fittype != null and fittype != ''" >
+		    and cp.fittype =  #{fittype}
+		</if>
+				<if test="customer != null and customer != ''" >
+		    and c.id =  #{customer.id}
+		</if>
+			<if test="type != null and type != ''" >
+		    and cp.type =  #{type}
+		</if>
+		</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		  insert into tb_customerproperty(id,name,code,fittype,customer_id,type)
+ values(#{id},#{name},#{code},#{fittype},#{customer.id},#{type})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  update tb_customerproperty set name=#{name},code=#{code},fittype=#{fittype},customer_id=#{customer.id},type=#{type} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update tb_customerproperty set 
+	<trim  suffixOverrides="," >
+	<if test="name != null  ">
+		name=#{name},
+	</if>
+	<if test="code != null  ">
+		code=#{code},
+	</if>
+	<if test="fittype != null  ">
+		fittype=#{fittype},
+	</if>
+	<if test="customer != null  ">
+		customer_id=#{customer.id},
+	</if>
+	<if test="type != null  ">
+		type=#{type},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete 	 from tb_customerproperty where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 客户业务设置 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" /> 
+	 from tb_customerproperty where id = #{id}
+	</select>
+	
+	<!-- 客户业务设置 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from tb_customerproperty 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询客户业务设置列表 -->
+<!-- 	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_customerproperty 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  id
+	    </if>
+	</select> -->
+		<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select cp.id,cp.name,cp.code,cp.fittype,cp.type,
+		c.id customer_id,c.name customer_name,c.account customer_account
+		from tb_customerproperty  cp
+		left join tb_customer c on
+		c.id = cp.customer_id
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  cp.id
+	    </if>
+	</select> 
+</mapper>   

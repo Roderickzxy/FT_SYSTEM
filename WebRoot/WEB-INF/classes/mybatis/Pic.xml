@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.PicMapper">
+
+	<resultMap type="Pic" id="picResultMap">
+	    <id column="id" property="id"/>
+	    <result column="houseResourceID" property="houseResourceID"/>
+		<result column="pic" property="pic"/>
+		<result column="title" property="title"/>
+		<result column="descripse" property="descripse"/>
+		<result column="status" property="status"/>
+		<result column="pic_type_id" property="picTypeId"/>
+		<result column="msg_id" property="msgId"/>
+		<result column="priority" property="priority"/>
+		<result column="figure" property="figure"/>
+	</resultMap>
+	
+	
+	<!-- 定义一张表,并且来个关联表 -->
+    <resultMap type="Pic" id="picJoinPicTypeResultMap">
+        <id column="id" property="id"/>
+        <result column="houseResourceID" property="houseResourceID"/>
+		<result column="pic" property="pic"/>
+		<result column="title" property="title"/>
+		<result column="descripse" property="descripse"/>
+		<result column="status" property="status"/>
+		<result column="priority" property="priority"/>
+		<result column="figure" property="figure"/>
+        <!-- 关联PicType表 -->
+        <association property="picType" column="picTypeId"
+            javaType="PicType" resultMap="joinPicResult" />
+    </resultMap>
+    <!-- 关联表需要的列 -->
+	<resultMap type="PicType" id="joinPicResult">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+	</resultMap>
+	
+	<select id="getPicById" parameterType="int" resultMap="picResultMap">
+		select * from tb_pic where id=#{id}
+	</select>
+	<select id="listAllPic" resultMap="picResultMap">
+		select * from tb_pic order by id desc
+	</select>
+	
+	<insert id="insertPic" parameterType="Pic"> <!--  useGeneratedKeys="true" keyProperty="id" -->
+			<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into tb_pic (id,houseResourceID,pic,title,descripse,status,pic_type_id,msg_id,priority,figure) 
+			values (#{id},#{houseResourceID},#{pic},#{title},#{descripse},#{status},#{picTypeId},#{msgId},#{priority},#{figure})
+	</insert>
+	
+	<update id="updatePic" parameterType="Pic">
+		update tb_pic set 
+		houseResourceID=#{houseResourceID},
+		pic=#{pic},
+		title=#{title},
+		descripse=#{descripse},
+		status=#{status},
+		pic_type_id=#{picTypeId},
+		msg_id=#{msgId},
+		priority=#{priority},
+		figure=#{figure} 
+		where id=#{id}
+	</update>
+	
+	<delete id="deletePicById" parameterType="int">
+		delete from tb_pic where id=#{id}
+	</delete>
+	
+	<select id="getCountByTitle" parameterType="Pic" resultType="int">
+		select count(id) from tb_pic where title=#{title}
+		<if test="id!=null or id>0">
+		 and id!=#{id}
+		</if>
+	</select>
+	
+	<select id="listPagePic" parameterType="Pic" resultMap="picResultMap">
+		select * from tb_pic
+		where 1=1 
+		<if test="title!=null and title!=''">
+			and title like "%"#{title}"%" 
+		</if>
+	</select>
+	
+	<!-- 关联查询 -->
+    <select id="listPicJoinPicType"  
+        resultMap="picJoinPicTypeResultMap" parameterType="Pic">  
+        select w.id,a.name,w.title,w.descripse,w.status,w.pic,w.priority,w.figure 
+        from tb_pic w 
+        left outer join tb_pic_type a on w.pic_type_id = a.id 
+        where 1=1 
+        <if test="title!=null and title!=''">
+			and w.title like "%"#{title}"%" 
+		</if> 
+        order by w.id desc  
+    </select>
+    
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.SiteMapper">
+
+	<resultMap type="Site" id="siteResultMap">
+		<id column="id" property="id"/>
+		<result column="domain" property="domain"/>
+		<result column="backimg" property="backimg"/>
+	</resultMap>
+	
+	<select id="getSiteById" parameterType="int" resultMap="siteResultMap">
+		select * from tb_site where id=#{id}
+	</select>
+	<select id="listAllSite" resultMap="siteResultMap">
+		select * from tb_site order by id desc
+	</select>
+	
+	<insert id="insertSite" parameterType="Site"  useGeneratedKeys="true" keyProperty="id">
+		insert into tb_site (domain,backimg) values (#{domain},#{backimg})
+	</insert>
+	
+	<update id="updateSite" parameterType="Site">
+		update tb_site set domain=#{domain},backimg=#{backimg} where id=#{id}
+	</update>
+	
+	<delete id="deleteSiteById" parameterType="int">
+		delete from tb_site where id=#{id}
+	</delete>
+	
+	<select id="getCountSiteByDomain" parameterType="Site" resultType="int">
+		select count(id) from tb_site where domain=#{domain}
+		<if test="id!=null or id>0">
+		 and id!=#{id}
+		</if>
+	</select>
+</mapper>

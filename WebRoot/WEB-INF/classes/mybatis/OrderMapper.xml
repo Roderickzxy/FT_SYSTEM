@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.OrderMapper">
+	<!-- Result Map -->
+	<resultMap id="billResultMap" type="Bill">
+		<id property="id" column="bill_id" />
+		<result property="deleteFlag" column="bill_deleteFlag" />
+		<result property="status" column="bill_status" />
+		<result property="isPaid" column="bill_isPaid" />
+		<result property="year" column="bill_year" />
+		<result property="month" column="bill_month" />
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.flf.entity.Order">
+		<result column="id" property="id" />
+		<!-- <result column="houseHirerID" property="houseHirerID"/> <result column="houseResourceID" 
+			property="houseResourceID"/> <result column="houseOwnerID" property="houseOwnerID"/> -->
+		<result column="createdTime" property="createdTime" />
+		<result column="updateTime" property="updateTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+		<result column="status" property="status" />
+		<result column="isComment" property="isComment" />
+		<association property="houseHirer" column="houseHirerID"
+			javaType="com.flf.entity.HouseHirer">
+			<id column="hirer_id" property="id" />
+			<result column="hirer_name" property="name" />
+			<result column="hirer_account" property="account" />
+		</association>
+		<association property="houseOwner" column="houseOwnerID"
+			javaType="com.flf.entity.HouseOwner">
+			<id column="owner_id" property="id" />
+			<result column="owner_name" property="name" />
+		</association>
+		<association property="houseResource" column="houseResourceID"
+			javaType="com.flf.entity.HouseResource">
+			<id column="resource_id" property="id" />
+			<result column="propertyName" property="propertyName" />
+			<result column="resource_rentAmount" property="rentAmount" />
+			<result column="resource_waterFee" property="waterFee" />
+			<result column="resource_electricityFee" property="electricityFee" />
+			<result column="resource_garbageFee" property="garbageFee" />
+		</association>
+		<!-- 将bill list属性映射到collection -->
+		<collection property="bills" column="id" javaType="ArrayList"
+			ofType="Bill" resultMap="billResultMap" select="queryByBillList" />
+	</resultMap>
+	<!-- 查询账单列表 -->
+	<select id="queryByBillList" resultMap="billResultMap"
+		parameterType="Bill">
+		select *
+		from tb_bill
+		where 1=1
+		and orderID = #{id}
+		and
+		deleteFlag = 'N'
+		order by houseOwnerID,year,month
+	</select>
+	<!-- tb_order table all fields -->
+	<sql id="Base_Column_List">
+		id,houseHirerID,houseResourceID,houseOwnerID,createdTime,updateTime,deleteFlag,status,isComment
+	</sql>
+	
+	<sql id="Left_Column_List">
+		od.id,hirer.id hirer_id,hirer.name
+		hirer_name,hirer.account
+		hirer_account,owner.id owner_id,owner.name
+		owner_name,
+		resource.id
+		resource_id,resource.propertyName,resource.rentAmount
+		resource_rentAmount,
+		resource.waterFee
+		resource_waterFee,resource.electricityFee resource_electricityFee,
+		resource.garbageFee resource_garbageFee,
+		od.createdTime,od.updateTime,od.deleteFlag,od.isComment,od.status
+	</sql>
+
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				and od.id = #{id}
+			</if>
+			<if test="houseHirer != null ">
+				<if test="houseHirer.id != null and houseHirer.id != ''">
+					and hirer.id = #{houseHirer.id}
+				</if>
+				<if test="houseHirer.account != null and houseHirer.account != ''">
+					and hirer.account like "%"#{houseHirer.account}"%"
+				</if>
+				<if test="houseHirer.name != null and houseHirer.name != ''">
+					and hirer.name like "%"#{houseHirer.name}"%"
+				</if>
+			</if>
+			<if test="houseResource != null and houseResource != ''">
+				<if test="houseResource.id != null and houseResource.id != ''">
+					and resource.id = #{houseResource.id}
+				</if>
+				<if
+					test="houseResource.propertyName != null and houseResource.propertyName != ''">
+					and resource.propertyName like
+					"%"#{houseResource.propertyName}"%"
+				</if>
+			</if>
+			<if test="houseOwner != null and houseOwner != ''">
+				<if test="houseOwner.id != null and houseOwner.id != ''">
+					and owner.id = #{houseOwner.id}
+				</if>
+				<if test="houseOwner.name != null and houseOwner.name != ''">
+					and owner.name like "%"#{houseOwner.name}"%"
+				</if>
+			</if>
+			<if test="createdTime != null and createdTime != ''">
+				and od.createdTime = #{createdTime}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				and od.updateTime = #{updateTime}
+			</if>
+			<if test="deleteFlag != null and deleteFlag != ''">
+				and od.deleteFlag = #{deleteFlag}
+			</if>
+			<if test="status != null and status != ''">
+				and od.status = #{status}
+			</if>
+			<if test="isComment != null and isComment != ''">
+				and od.isComment = #{isComment}
+			</if>
+			<if test="startCreatedTime!=null">
+				and od.createdTime&gt;=#{startCreatedTime}
+			</if>
+			<if test="endCreatedTime!=null">
+				and od.createdTime&lt;=#{endCreatedTime}
+			</if>
+
+		</trim>
+	</sql>
+
+
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		tb_order(id,houseHirerID,houseResourceID,houseOwnerID,createdTime,updateTime,deleteFlag,status,isComment)
+		values(#{id},#{houseHirer.id},#{houseResource.id},#{houseOwner.id},#{createdTime},now(),#{deleteFlag},#{status},#{isComment})
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update tb_order set
+		houseHirerID=#{houseHirer.id},houseResourceID=#{houseResource.id},houseOwnerID=#{houseOwner.id}
+		,createdTime=#{createdTime},updateTime=now(),deleteFlag=#{deleteFlag},status=#{status}
+		,isComment=#{isComment}
+		where id=#{id}
+	</update>
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object">
+		update tb_order set
+		<trim suffixOverrides=",">
+			<if test="houseHirer != null  ">
+				<if test="houseHirer.id != null  ">
+					houseHirerID=#{houseHirer.id},
+				</if>
+			</if>
+			<if test="houseResource != null  ">
+				<if test="houseResource.id != null  ">
+					houseResourceID=#{houseResource.id},
+				</if>
+			</if>
+			<if test="houseOwner != null  ">
+				<if test="houseOwner.id != null  ">
+					houseOwnerID=#{houseOwner.id},
+				</if>
+			</if>
+			<if test="createdTime != null  ">
+				createdTime=#{createdTime},
+			</if>
+			<if test="updateTime != null  ">
+				updateTime=#{updateTime},
+			</if>
+			<if test="deleteFlag != null  ">
+				deleteFlag=#{deleteFlag},
+			</if>
+			<if test="status != null  ">
+				status=#{status},
+			</if>
+			<if test="isComment != null  ">
+				isComment=#{isComment},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from tb_order where id
+		= #{id}
+	</delete>
+
+	<!-- 根据id查询 订单 -->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+		<!-- select <include refid="Base_Column_List" />
+		from tb_order od -->
+		select
+		<include refid="Left_Column_List" />
+		<include refid="Left_Join_List" />
+		where od.id = #{id}
+	</select>
+
+	<!-- 订单 列表总数 -->
+	<select id="queryByCount" resultType="java.lang.Integer"
+		parameterType="Object">
+		select count(1) from tb_order
+		<include refid="Example_Where_Clause" />
+	</select>
+
+	<!-- 查询订单列表 -->
+	<select id="queryByList" resultMap="BaseResultMap"
+		parameterType="Object">
+		<include refid="Left_Column_List" />
+		<include refid="Example_Where_Clause" />
+
+		<if test="id != null and id != ''">
+			order by od.id
+		</if>
+	</select>
+	<sql id="Left_Join_List">
+	from
+		tb_order od
+		left join tb_house_hirer hirer on od.houseHirerID=hirer.id
+		left join tb_house_owner owner on od.houseOwnerID=owner.id
+		left join
+		tb_house_resource
+		resource on od.houseResourceID=resource.id
+	</sql>
+	<sql id="Left_Select_List">
+		select
+		<include refid="Left_Column_List" />
+		<include refid="Left_Join_List" />
+		<include refid="Example_Where_Clause" />
+	</sql>
+	<!-- 按页查询订单列表 -->
+	<select id="listPageOrder" resultMap="BaseResultMap"
+		parameterType="Object">
+		<include refid="Left_Select_List" />
+		<if test="id != null and id != ''">
+			order by od.id
+		</if>
+	</select>
+
+</mapper>   

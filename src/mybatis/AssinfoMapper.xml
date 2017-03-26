@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.AssinfoMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.Assinfo" >
+			<result column="id" property="id"/>
+			<result column="title" property="title"/>
+			<result column="content" property="content"/>
+			<result column="status" property="status"/>
+			<result column="msg_type" property="msgType"/>
+		</resultMap>
+	       
+	<!-- tb_assinfo table all fields -->
+	<sql id="Base_Column_List" >
+		 id,title,content,status,msg_type
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and id =  #{id}
+		</if>
+				<if test="title != null and title != ''" >
+		    and title =  #{title}
+		</if>
+				<if test="content != null and content != ''" >
+		    and content =  #{content}
+		</if>
+				<if test="status != null and status != ''" >
+		    and status =  #{status}
+		</if>
+				<if test="msgType != null and msgType != ''" >
+		    and msg_type =  #{msgType}
+		</if>
+		</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		  insert into tb_assinfo(id,title,content,status,msg_type)
+ values(#{id},#{title},#{content},#{status},#{msgType})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  update tb_assinfo set title=#{title},content=#{content},status=#{status},msg_type=#{msgType} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update tb_assinfo set 
+	<trim  suffixOverrides="," >
+	<if test="title != null  ">
+		title=#{title},
+	</if>
+	<if test="content != null  ">
+		content=#{content},
+	</if>
+	<if test="status != null  ">
+		status=#{status},
+	</if>
+	<if test="msgType != null  ">
+		msg_type=#{msgType},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete 	 from tb_assinfo where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 帮助信息管理 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" /> 
+	 from tb_assinfo where id = #{id}
+	</select>
+	
+	<!-- 帮助信息管理 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from tb_assinfo 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询帮助信息管理列表 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_assinfo 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  id
+	    </if>
+	</select>
+</mapper>   

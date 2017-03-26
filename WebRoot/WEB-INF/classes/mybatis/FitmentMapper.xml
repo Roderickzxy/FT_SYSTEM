@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.FitmentMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.Fitment" >
+			<result column="id" property="id"/>
+			<result column="name" property="name"/>
+			<result column="code" property="code"/>
+			<result column="fittype" property="fittype"/>
+		</resultMap>
+	       
+	<!-- tb_fitment table all fields -->
+	<sql id="Base_Column_List" >
+		 id,name,code,fittype
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and id =  #{id}
+		</if>
+				<if test="name != null and name != ''" >
+		    and name =  #{name}
+		</if>
+				<if test="code != null and code != ''" >
+		    and code =  #{code}
+		</if>
+				<if test="fittype != null and fittype != ''" >
+		    and fittype =  #{fittype}
+		</if>
+		</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		  insert into tb_fitment(id,name,code,fittype)
+ values(#{id},#{name},#{code},#{fittype})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  update tb_fitment set name=#{name},code=#{code},fittype=#{fittype} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update tb_fitment set 
+	<trim  suffixOverrides="," >
+	<if test="name != null  ">
+		name=#{name},
+	</if>
+	<if test="code != null  ">
+		code=#{code},
+	</if>
+	<if test="fittype != null  ">
+		fittype=#{fittype},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete 	 from tb_fitment where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 业务信息管理 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" /> 
+	 from tb_fitment where id = #{id}
+	</select>
+	
+	<!-- 业务信息管理 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from tb_fitment 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询业务信息管理列表 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_fitment 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  id
+	    </if>
+	</select>
+</mapper>   

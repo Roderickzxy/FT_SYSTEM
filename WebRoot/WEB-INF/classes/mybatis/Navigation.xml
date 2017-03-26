@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.NavigationMapper">
+
+	<resultMap type="Navigation" id="navigationResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="code" property="code"/>
+		<result column="url" property="url"/>
+		<result column="pic" property="pic"/>
+	</resultMap>
+	
+	<select id="getNavigationById" parameterType="int" resultMap="navigationResultMap">
+		select * from tb_navigation where id=#{id}
+	</select>
+	<select id="listAllNavigation" resultMap="navigationResultMap">
+		select * from tb_navigation order by id desc
+	</select>
+	
+	<insert id="insertNavigation" parameterType="Navigation"  useGeneratedKeys="true" keyProperty="id">
+		insert into tb_navigation (name,code,url,pic) values (#{name},#{code},#{url},#{pic})
+	</insert>
+	
+	<update id="updateNavigation" parameterType="Navigation">
+		update tb_navigation set 
+		name=#{name},
+		code=#{code},
+		url=#{url},
+		pic=#{pic}
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteNavigationById" parameterType="int">
+		delete from tb_navigation where id=#{id}
+	</delete>
+	
+	<select id="getCountNavigationByName" parameterType="Navigation" resultType="int">
+		select count(id) from tb_navigation where name=#{name}
+		<if test="id!=null or id>0">
+		 and id!=#{id}
+		</if>
+	</select>
+</mapper>

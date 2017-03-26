@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.flf.mapper.GroupMsgMapper">
+	<resultMap type="GroupMsg" id="groupMsgResultMap">
+		<id column="id" property="id" />
+		<result column="is_to_all" property="isToAll" />
+		<result column="msgtype" property="msgtype" />
+		<result column="group_id" property="groupId" />
+		<result column="media_id" property="mediaId" />
+		<result column="createdTime" property="createdTime" />
+		<result column="msg_id" property="msg_id" />
+	</resultMap>
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				and id = #{id}
+			</if>
+			<if test="isToAll != null and isToAll != ''">
+				and is_to_all = #{isToAll}
+			</if>
+			<if test="msgtype != null and msgtype != ''">
+				and msgtype = #{msgtype}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				and group_id = #{groupId}
+			</if>
+			<if test="mediaId != null and mediaId != ''">
+				and media_id = #{mediaId}
+			</if>
+			<if test="msg_id != null and msg_id != ''">
+				and msg_id = #{msg_id}
+			</if>
+			<if test="createdTimeStart!=null">
+				and createdTime&gt;=#{createdTimeStart}
+			</if>
+			<if test="createdTimeEnd!=null">
+				and createdTime&lt;=#{createdTimeEnd}
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 查询群发信息列表 -->
+	<select id="queryByList" resultMap="groupMsgResultMap">
+		select * from tb_group_msg
+		where 1=1
+	</select>
+	<select id="listPageGroupMsg" parameterType="GroupMsg"
+		resultMap="groupMsgResultMap">
+		select *
+		from tb_group_msg
+		<include refid="Example_Where_Clause" />
+	</select>
+	<insert id="insertGroupMsg" parameterType="GroupMsg" flushCache="true">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id">
+			<!-- select coalesce(max(id), 0)+1 from tb_group_msg o -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into tb_group_msg (id, is_to_all, msgtype,
+		group_id,
+		media_id,msg_id,createdTime)
+		values (id, #{isToAll,jdbcType=INTEGER},
+		#{msgtype,jdbcType=VARCHAR},
+		#{groupId,jdbcType=BIGINT},
+		#{mediaId,jdbcType=VARCHAR},#{msg_id,jdbcType=BIGINT},now())
+	</insert>
+	<!-- <resultMap id="groupMsgResultMap" type="GroupMsg" > <id column="id" 
+		property="id" /> <result column="is_to_all" property="isToAll" /> <result 
+		column="msgtype" property="msgtype" /> <result column="group_id" property="groupId" 
+		/> <result column="media_id" property="mediaId" /> <result column="createdTime" 
+		property="createdTime" /> </resultMap> -->
+	<!-- <sql id="Base_Column_List" > id, is_to_all, msgtype, group_id, media_id 
+		</sql> <select id="selectById" resultMap="groupMsgResultMap" parameterType="java.lang.Long" 
+		> select <include refid="Base_Column_List" /> from tb_group_msg where id 
+		= #{id,jdbcType=BIGINT} </select> <delete id="deleteById" parameterType="java.lang.Long" 
+		flushCache="true" > delete from tb_group_msg where id = #{id,jdbcType=BIGINT} 
+		</delete> <insert id="insert" parameterType="GroupMsg" flushCache="true" 
+		> insert into tb_group_msg (id, is_to_all, msgtype, group_id, media_id,createdTime) 
+		values (#{id,jdbcType=BIGINT}, #{isToAll,jdbcType=INTEGER}, #{msgtype,jdbcType=VARCHAR}, 
+		#{groupId,jdbcType=BIGINT}, #{mediaId,jdbcType=VARCHAR},now()) </insert> 
+		<insert id="insertSelective" parameterType="GroupMsg" flushCache="true" > 
+		insert into tb_group_msg <trim prefix="(" suffix=")" suffixOverrides="," 
+		> id, is_to_all, msgtype, group_id, media_id, createdTime, </trim> <trim 
+		prefix="values (" suffix=")" suffixOverrides="," > #{id,jdbcType=BIGINT}, 
+		#{isToAll,jdbcType=INTEGER}, #{msgtype,jdbcType=VARCHAR}, #{groupId,jdbcType=BIGINT}, 
+		#{mediaId,jdbcType=VARCHAR}, now(), </trim> </insert> <update id="updateByIdSelective" 
+		parameterType="GroupMsg" flushCache="true" > update tb_group_msg <set > <if 
+		test="isToAll != null" > is_to_all = #{isToAll,jdbcType=INTEGER}, </if> <if 
+		test="msgtype != null" > msgtype = #{msgtype,jdbcType=VARCHAR}, </if> <if 
+		test="groupId != null" > group_id = #{groupId,jdbcType=BIGINT}, </if> <if 
+		test="mediaId != null" > media_id = #{mediaId,jdbcType=VARCHAR}, </if> <if 
+		test="createdTime != null "> createdTime=#{createdTime}, </if> </set> where 
+		id = #{id,jdbcType=BIGINT} </update> <update id="updateById" parameterType="GroupMsg" 
+		flushCache="true" > update tb_group_msg set is_to_all = #{isToAll,jdbcType=INTEGER}, 
+		msgtype = #{msgtype,jdbcType=VARCHAR}, group_id = #{groupId,jdbcType=BIGINT}, 
+		media_id = #{mediaId,jdbcType=VARCHAR} where id = #{id,jdbcType=BIGINT} </update> -->
+
+
+
+</mapper>

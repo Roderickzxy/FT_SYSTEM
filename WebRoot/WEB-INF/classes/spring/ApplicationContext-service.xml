@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="userService" class="com.flf.service.impl.UserServiceImpl">
+		<property name="userMapper" ref="userMapper" />
+	</bean>
+	<bean id="roleService" class="com.flf.service.impl.RoleServiceImpl">
+		<property name="roleMapper" ref="roleMapper" />
+	</bean>
+	<bean id="menuService" class="com.flf.service.impl.MenuServiceImpl">
+		<property name="menuMapper" ref="menuMapper" />
+	</bean>
+	 <bean id="infoService" class="com.flf.service.impl.InfoServiceImpl">
+		<property name="infoMapper" ref="infoMapper" />
+	</bean>
+	<bean id="msgService" class="com.flf.service.impl.MsgServiceImpl">
+		<property name="msgMapper" ref="msgMapper" />
+	</bean>
+	<bean id="msgTypeService" class="com.flf.service.impl.MsgTypeServiceImpl">
+		<property name="msgTypeMapper" ref="msgTypeMapper" />
+	</bean>
+	<bean id="navigationService" class="com.flf.service.impl.NavigationServiceImpl">
+		<property name="navigationMapper" ref="navigationMapper" />
+	</bean>
+	<bean id="SiteService" class="com.flf.service.impl.SiteServiceImpl">
+		<property name="siteMapper" ref="siteMapper" />
+	</bean>
+	<bean id="picService" class="com.flf.service.impl.PicServiceImpl">
+		<property name="picMapper" ref="picMapper" />
+	</bean>
+	<bean id="picTypeService" class="com.flf.service.impl.PicTypeServiceImpl">
+		<property name="picTypeMapper" ref="picTypeMapper" />
+	</bean>
+  	<!-- 毕业设计 -->
+  	<bean id="customerService" class=" com.flf.service.impl.CustomerServiceImpl">
+		<property name="customerMapper" ref="customerMapper" />
+	</bean>
+
+   	<bean id="transactionflowService" class=" com.flf.service.impl.TransactionflowServiceImpl">
+		<property name="transactionflowMapper" ref="transactionflowMapper" />
+	</bean>
+
+	<bean id="accountinfoService" class=" com.flf.service.impl.AccountinfoServiceImpl">
+		<property name="accountinfoMapper" ref="accountinfoMapper" />
+	</bean>
+	
+	<bean id="assinfoService" class=" com.flf.service.impl.AssinfoServiceImpl">
+		<property name="assinfoMapper" ref="assinfoMapper" />
+	</bean>
+	
+	<bean id="fitmentService" class=" com.flf.service.impl.FitmentServiceImpl">
+		<property name="fitmentMapper" ref="fitmentMapper" />
+	</bean>
+	
+	<bean id="customerpropertyService" class=" com.flf.service.impl.CustomerpropertyServiceImpl">
+		<property name="customerpropertyMapper" ref="customerpropertyMapper" />
+	</bean>
+</beans>

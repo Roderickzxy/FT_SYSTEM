@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.flf.mapper.TransactionflowMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.flf.entity.Transactionflow" >
+			<result column="id" property="id"/>
+			<result column="tradate" property="tradate"/>
+			<result column="tratime" property="tratime"/>
+			<result column="bankname" property="bankname"/>
+			<result column="operate" property="operate"/>
+			<result column="curtype" property="curtype"/>
+			<result column="amount" property="amount"/>
+			<result column="status" property="status"/>
+			<result column="customer_id" property="customerId"/>
+		</resultMap>
+	       
+	<!-- tb_transactionflow table all fields -->
+	<sql id="Base_Column_List" >
+		 id,tradate,tratime,bankname,operate,curtype,amount,status,customer_id
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim  suffixOverrides="," >
+				<if test="id != null and id != ''" >
+		    and id =  #{id}
+		</if>
+				<if test="tradate != null and tradate != ''" >
+		    and tradate =  #{tradate}
+		</if>
+				<if test="tratime != null and tratime != ''" >
+		    and tratime =  #{tratime}
+		</if>
+				<if test="bankname != null and bankname != ''" >
+		    and bankname =  #{bankname}
+		</if>
+				<if test="operate != null and operate != ''" >
+		    and operate =  #{operate}
+		</if>
+				<if test="curtype != null and curtype != ''" >
+		    and curtype =  #{curtype}
+		</if>
+				<if test="amount != null and amount != ''" >
+		    and amount =  #{amount}
+		</if>
+				<if test="status != null and status != ''" >
+		    and status =  #{status}
+		</if>
+				<if test="customerId != null and customerId != ''" >
+		    and customer_id =  #{customerId}
+		</if>
+			<if test="startTradate!=null">
+				and tradate&gt;=#{startTradate}
+			</if>
+			<if test="endTradate!=null">
+				and tradate&lt;=#{endTradate}
+			</if>
+		</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		  insert into tb_transactionflow(id,tradate,tratime,bankname,operate,curtype,amount,status,customer_id)
+ values(#{id},#{tradate},#{tratime},#{bankname},#{operate},#{curtype},#{amount},#{status},#{customerId})
+	</insert>
+	
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  update tb_transactionflow set tradate=#{tradate},tratime=#{tratime},bankname=#{bankname},operate=#{operate},curtype=#{curtype},amount=#{amount},status=#{status} where id=#{id}
+	 </update>
+	 
+	 <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update tb_transactionflow set 
+	<trim  suffixOverrides="," >
+	<if test="tradate != null  ">
+		tradate=#{tradate},
+	</if>
+	<if test="tratime != null  ">
+		tratime=#{tratime},
+	</if>
+	<if test="bankname != null  ">
+		bankname=#{bankname},
+	</if>
+	<if test="operate != null  ">
+		operate=#{operate},
+	</if>
+	<if test="curtype != null  ">
+		curtype=#{curtype},
+	</if>
+	<if test="amount != null  ">
+		amount=#{amount},
+	</if>
+	<if test="status != null  ">
+		status=#{status},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete 	 from tb_transactionflow where id = #{id}
+	</delete>
+	 
+	<!-- 根据id查询 账户交易流水 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" /> 
+	 from tb_transactionflow where id = #{id}
+	</select>
+	
+	<!-- 账户交易流水 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from tb_transactionflow 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询账户交易流水列表 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from tb_transactionflow 
+		<include refid="Example_Where_Clause"/>
+		<if test="id != null and id != ''" >
+	       order by  id
+	    </if>
+	</select>
+</mapper>   
